@@ -21,6 +21,7 @@ public class UserController {
     //can currently choose if they are admin or user
     //TODO
     //Make it so that they are users by default and not just anyone can become a admin
+    //also change id generation to not be incremental
     @PostMapping("/create")
     public ResponseEntity<User> createNewUser(@RequestBody User user) {
 
