@@ -5,8 +5,7 @@ import com.example.examensprojekt.repository.TestQuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class TestQuestionService {
@@ -34,16 +33,13 @@ public class TestQuestionService {
         testQuestionRepository.deleteById(id);
     }
 
-    //TODO
-    //Get a random question
-    //Random question can be totally random or random from a category
     public TestQuestion getRandomQuestion() {
         List<TestQuestion> allQuestions = testQuestionRepository.findAll();
         if (!allQuestions.isEmpty()) {
             Random random = new Random();
             return allQuestions.get(random.nextInt(allQuestions.size()));
         }
-        return null; // Return null if there are no questions in the database
+        return null;
     }
 
     public TestQuestion getRandomQuestionByCategory(Long categoryId) {
@@ -52,8 +48,32 @@ public class TestQuestionService {
             Random random = new Random();
             return categoryQuestions.get(random.nextInt(categoryQuestions.size()));
         }
-        return null; // Return null if there are no questions in the specified category
+        return null;
     }
 
+    public Set<Long> getQuestionsFromCategory(int amount, Long categoryId) {
+        List<TestQuestion> categoryQuestions = testQuestionRepository.findByCategoryId(categoryId);
+        Set<Long> selectedQuestionIds = new HashSet<>();
+
+        if (!categoryQuestions.isEmpty()) {
+            int totalQuestions = categoryQuestions.size();
+
+            if (amount <= totalQuestions) {
+                Random random = new Random();
+
+                while (selectedQuestionIds.size() < amount) {
+                    int randomIndex = random.nextInt(totalQuestions);
+                    TestQuestion selectedQuestion = categoryQuestions.get(randomIndex);
+                    selectedQuestionIds.add(selectedQuestion.getId());
+                }
+            }
+        }
+
+        return selectedQuestionIds;
+    }
+
+    public List<TestQuestion> getQuestionsByIds(Set<Long> questionIds) {
+        return testQuestionRepository.findAllById(questionIds);
+    }
 
 }

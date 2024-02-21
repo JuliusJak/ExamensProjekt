@@ -9,6 +9,7 @@ import com.example.examensprojekt.service.TestQuestionService;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/test")
@@ -66,6 +67,21 @@ public class TestQuestionController {
     public ResponseEntity<String> deleteQuestion(@PathVariable Long id) {
         testQuestionService.deleteQuestion(id);
         return ResponseEntity.ok("Question with ID " + id + " has been successfully deleted");
+    }
+
+    @GetMapping("/questions/randomFromCategory")
+    public ResponseEntity<List<TestQuestion>> getRandomQuestionsFromCategory(
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = true) int amount) {
+
+        Set<Long> selectedQuestionIds = testQuestionService.getQuestionsFromCategory(amount, categoryId);
+        List<TestQuestion> selectedQuestions = testQuestionService.getQuestionsByIds(selectedQuestionIds);
+
+        if (!selectedQuestions.isEmpty()) {
+            return ResponseEntity.ok(selectedQuestions);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
