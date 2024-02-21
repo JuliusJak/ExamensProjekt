@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class TestQuestionService {
@@ -36,6 +37,23 @@ public class TestQuestionService {
     //TODO
     //Get a random question
     //Random question can be totally random or random from a category
+    public TestQuestion getRandomQuestion() {
+        List<TestQuestion> allQuestions = testQuestionRepository.findAll();
+        if (!allQuestions.isEmpty()) {
+            Random random = new Random();
+            return allQuestions.get(random.nextInt(allQuestions.size()));
+        }
+        return null; // Return null if there are no questions in the database
+    }
+
+    public TestQuestion getRandomQuestionByCategory(Long categoryId) {
+        List<TestQuestion> categoryQuestions = testQuestionRepository.findByCategoryId(categoryId);
+        if (!categoryQuestions.isEmpty()) {
+            Random random = new Random();
+            return categoryQuestions.get(random.nextInt(categoryQuestions.size()));
+        }
+        return null; // Return null if there are no questions in the specified category
+    }
 
 
 }

@@ -38,6 +38,23 @@ public class TestQuestionController {
         }
     }
 
+    @GetMapping("/questions/random")
+    public ResponseEntity<TestQuestion> getRandomQuestion(@RequestParam(required = false) Long categoryId) {
+        TestQuestion randomQuestion;
+
+        if (categoryId != null) {
+            randomQuestion = testQuestionService.getRandomQuestionByCategory(categoryId);
+        } else {
+            randomQuestion = testQuestionService.getRandomQuestion();
+        }
+
+        if (randomQuestion != null) {
+            return ResponseEntity.ok(randomQuestion);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping("/questions/create")
     public ResponseEntity<TestQuestion> createQuestion(@RequestBody TestQuestion question) {
 
