@@ -8,6 +8,7 @@ import com.example.examensprojekt.model.TestQuestion;
 import com.example.examensprojekt.service.TestQuestionService;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -75,6 +76,34 @@ public class TestQuestionController {
             @RequestParam(required = true) int amount) {
 
         Set<Long> selectedQuestionIds = testQuestionService.getQuestionsFromCategory(amount, categoryId);
+        List<TestQuestion> selectedQuestions = testQuestionService.getQuestionsByIds(selectedQuestionIds);
+
+        if (!selectedQuestions.isEmpty()) {
+            return ResponseEntity.ok(selectedQuestions);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/questions/randomFromSelectedCategories")
+    public ResponseEntity<List<TestQuestion>> getRandomQuestionsFromSelectedCategories(
+            @RequestParam(required = true) int amount,
+            @RequestParam(required = true) boolean categoryOne,
+            @RequestParam(required = true) boolean categoryTwo,
+            @RequestParam(required = true) boolean categoryThree) {
+
+        Set<Long> selectedQuestionIds = new HashSet<>();
+
+        if (categoryOne) {
+            selectedQuestionIds.addAll(testQuestionService.getQuestionsFromCategory(amount, 1L));
+        }
+        if (categoryTwo) {
+            selectedQuestionIds.addAll(testQuestionService.getQuestionsFromCategory(amount, 2L));
+        }
+        if (categoryThree) {
+            selectedQuestionIds.addAll(testQuestionService.getQuestionsFromCategory(amount, 3L));
+        }
+
         List<TestQuestion> selectedQuestions = testQuestionService.getQuestionsByIds(selectedQuestionIds);
 
         if (!selectedQuestions.isEmpty()) {
