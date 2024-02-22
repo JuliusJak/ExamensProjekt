@@ -70,21 +70,6 @@ public class TestQuestionController {
         return ResponseEntity.ok("Question with ID " + id + " has been successfully deleted");
     }
 
-    @GetMapping("/questions/randomFromCategory")
-    public ResponseEntity<List<TestQuestion>> getRandomQuestionsFromCategory(
-            @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = true) int amount) {
-
-        Set<Long> selectedQuestionIds = testQuestionService.getQuestionsFromCategory(amount, categoryId);
-        List<TestQuestion> selectedQuestions = testQuestionService.getQuestionsByIds(selectedQuestionIds);
-
-        if (!selectedQuestions.isEmpty()) {
-            return ResponseEntity.ok(selectedQuestions);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @GetMapping("/questions/randomFromSelectedCategories")
     public ResponseEntity<List<TestQuestion>> getRandomQuestionsFromSelectedCategories(
             @RequestParam(required = true) int amount,
