@@ -12,8 +12,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@CrossOrigin(origins = "http://localhost:8501")
 @RestController
-@RequestMapping("/api/test")
+@RequestMapping("/test")
 public class TestQuestionController {
 
     @Autowired

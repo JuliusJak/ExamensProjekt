@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:8501")
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
@@ -25,6 +26,9 @@ public class UserController {
     @PostMapping("/create")
     public ResponseEntity<User> createNewUser(@RequestBody User user) {
 
+        if (user.getRole() != "ADMIN"){
+            user.setRole("USER");
+        }
         User savedUser = userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
@@ -42,9 +46,10 @@ public class UserController {
     public ResponseEntity<List<User>> searchUsers(
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) String username,
+            @RequestParam(required = false) String password,
             @RequestParam(required = false) String role) {
 
-        List<User> searchResults = userRepository.findUsersWithParams(id, username, role);
+        List<User> searchResults = userRepository.findUsersWithParams(id, username, password, role);
 
         return ResponseEntity.ok(searchResults);
     }

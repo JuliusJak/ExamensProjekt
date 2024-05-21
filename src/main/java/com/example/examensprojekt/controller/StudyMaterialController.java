@@ -9,8 +9,9 @@ import com.example.examensprojekt.service.StudyMaterialService;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:8501")
 @RestController
-@RequestMapping("/api/study")
+@RequestMapping("/study")
 public class StudyMaterialController {
 
     @Autowired

@@ -19,20 +19,6 @@ public class MenuController {
         this.userService = userService;
     }
 
-    @GetMapping("/login")
-    public String showLoginForm() {
-        return "login";
-    }
-
-    @GetMapping("/signup")
-    public String showSignupForm() {
-        return "signup";
-    }
-
-    @GetMapping("/home")
-    public String showHomePage() {
-        return "home";
-    }
 
 
     @PostMapping("/login")

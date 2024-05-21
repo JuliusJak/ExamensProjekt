@@ -18,8 +18,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     //Search for a user matching all given params
     @Query("SELECT u FROM User u WHERE (:id IS NULL OR u.id = :id) " +
             "AND (:username IS NULL OR u.username = :username) " +
+            "AND (:password IS NULL OR u.password = :password) " +
             "AND (:role IS NULL OR u.role = :role)")
-    List<User> findUsersWithParams(Long id, String username, String role);
+    List<User> findUsersWithParams(Long id, String username, String password, String role);
 
     // Delete user by ID
     void deleteById(Long id);

@@ -26,8 +26,8 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public List<User> getUsersWithParams(Long id, String username, String role) {
-        return userRepository.findUsersWithParams(id, username, role);
+    public List<User> getUsersWithParams(Long id, String username, String password, String role) {
+        return userRepository.findUsersWithParams(id, username, password, role);
     }
 
     public User createUser(User user) {
@@ -43,7 +43,7 @@ public class UserService {
     }
 
     public boolean checkCredentials(String username, String password) {
-        List<User> users = userRepository.findUsersWithParams(null, username, null);
+        List<User> users = userRepository.findUsersWithParams(null, username, password, null);
 
         if (!users.isEmpty()) {
             User user = users.get(0);
