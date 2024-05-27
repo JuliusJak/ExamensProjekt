@@ -65,11 +65,17 @@ public class TestQuestionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdQuestion);
     }
 
-    @DeleteMapping("/questions/{id}")
-    public ResponseEntity<String> deleteQuestion(@PathVariable Long id) {
-        testQuestionService.deleteQuestion(id);
-        return ResponseEntity.ok("Question with ID " + id + " has been successfully deleted");
+    @DeleteMapping("/questions/delete")
+    public ResponseEntity<String> deleteQuestion(@RequestParam Long id) {
+        try {
+            testQuestionService.deleteQuestion(id);
+            return ResponseEntity.ok("Question with ID " + id + " has been successfully deleted");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to delete question with ID " + id);
+        }
     }
+
 
     @GetMapping("/questions/randomFromSelectedCategories")
     public ResponseEntity<List<TestQuestion>> getRandomQuestionsFromSelectedCategories(

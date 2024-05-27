@@ -44,9 +44,11 @@ public class StudyMaterialController {
         List<StudyMaterial> searchResults = studyMaterialService.searchStudyMaterials(content);
 
         if (searchResults.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No study materials found matching the search criteria.");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No study materials found matching the search criteria.");
         } else {
             return ResponseEntity.ok(searchResults);
         }
     }
+
+    //TODO be able to mark questions as favourites and then be able to see them and get only them in a fetch
 }

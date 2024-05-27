@@ -25,10 +25,21 @@ public class UserController {
     //also change id generation to not be incremental
     @PostMapping("/create")
     public ResponseEntity<User> createNewUser(@RequestBody User user) {
+        // Search for existing users with the same username
+        ResponseEntity<List<User>> searchResponse = searchUsers(null, user.getUsername(), null, null);
+        List<User> existingUsers = searchResponse.getBody();
 
-        if (user.getRole() != "ADMIN"){
+        // Check if the username is already taken
+        if (existingUsers != null && !existingUsers.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
+
+        // Ensure the user's role is set correctly
+        if (!"ADMIN".equals(user.getRole())) {
             user.setRole("USER");
         }
+
+        // Save the new user
         User savedUser = userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
@@ -59,7 +70,8 @@ public class UserController {
     public ResponseEntity<String> updateUser(
             @RequestParam Long id,
             @RequestParam(required = false) String newUsername,
-            @RequestParam(required = false) String newPassword) {
+            @RequestParam(required = false) String newPassword,
+            @RequestParam(required = false) String newRole) {
 
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
@@ -71,6 +83,9 @@ public class UserController {
 
             if (newPassword != null && !newPassword.isEmpty()) {
                 user.setPassword(newPassword);
+            }
+            if (newRole != null && !newRole.isEmpty()) {
+                user.setRole(newRole);
             }
 
             userRepository.save(user);
@@ -85,11 +100,14 @@ public class UserController {
 
     // Delete user
     @DeleteMapping("/delete")
-    public String deleteUser(
-            @RequestParam Long id) {
-
-        userRepository.deleteById(id);
-
-        return "User with id: "+ id +" has been deleted successfully";
+    public ResponseEntity<String> deleteUser(@RequestParam Long id) {
+        try {
+            userRepository.deleteById(id);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("User with id: " + id + " has been deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to delete user with id: " + id);
+        }
     }
 }
