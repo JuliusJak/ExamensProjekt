@@ -14,13 +14,13 @@ import java.util.Set;
 
 @CrossOrigin(origins = "http://localhost:8501")
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/questions")
 public class TestQuestionController {
 
     @Autowired
     private TestQuestionService testQuestionService;
 
-    @GetMapping("/questions")
+    @GetMapping("/get")
     public ResponseEntity<List<TestQuestion>> getQuestions(
             @RequestParam(name = "id", required = false) Long id,
             @RequestParam(name = "categoryId", required = false) Long categoryId) {
@@ -41,7 +41,7 @@ public class TestQuestionController {
         }
     }
 
-    @GetMapping("/questions/random")
+    @GetMapping("/random")
     public ResponseEntity<TestQuestion> getRandomQuestion(@RequestParam(required = false) Long categoryId) {
         TestQuestion randomQuestion;
 
@@ -58,14 +58,14 @@ public class TestQuestionController {
         }
     }
 
-    @PostMapping("/questions/create")
+    @PostMapping("/create")
     public ResponseEntity<TestQuestion> createQuestion(@RequestBody TestQuestion question) {
 
         TestQuestion createdQuestion = testQuestionService.createQuestion(question);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdQuestion);
     }
 
-    @DeleteMapping("/questions/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<String> deleteQuestion(@RequestParam Long id) {
         try {
             testQuestionService.deleteQuestion(id);
@@ -77,7 +77,7 @@ public class TestQuestionController {
     }
 
 
-    @GetMapping("/questions/randomFromSelectedCategories")
+    @GetMapping("/randomFromSelectedCategories")
     public ResponseEntity<List<TestQuestion>> getRandomQuestionsFromSelectedCategories(
             @RequestParam(required = true) int amount,
             @RequestParam(required = true) boolean categoryOne,
