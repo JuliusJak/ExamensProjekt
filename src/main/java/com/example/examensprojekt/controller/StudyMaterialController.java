@@ -1,5 +1,6 @@
 package com.example.examensprojekt.controller;
 
+import com.example.examensprojekt.repository.StudyMaterialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,9 @@ public class StudyMaterialController {
 
     @Autowired
     private StudyMaterialService studyMaterialService;
+
+    @Autowired
+    private StudyMaterialRepository studyMaterialRepository;
 
     @GetMapping("/study-materials")
     public ResponseEntity<?> getAllStudyMaterials() {
@@ -50,5 +54,11 @@ public class StudyMaterialController {
         }
     }
 
+    @PostMapping("/create")
+    public ResponseEntity<?> createStudyMaterial(@RequestBody StudyMaterial studyMaterial) {
+
+        StudyMaterial createdStudyMaterial = studyMaterialRepository.save(studyMaterial);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdStudyMaterial);
+    }
     //TODO be able to mark questions as favourites and then be able to see them and get only them in a fetch
 }
